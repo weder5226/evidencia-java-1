@@ -6,7 +6,8 @@ import org.evidencia.model.Client;
 public class Main {
   public static void main(String[] args) {
     System.out.println("Testing execution");
-    createClient();
+//    createClient();
+    getAllClients();
   }
 
   public static void createClient() {
@@ -21,6 +22,11 @@ public class Main {
     );
 
     ClientDAO clientDAO = new ClientDAO();
-    clientDAO.createClient(newClient);
+    clientDAO.create(newClient);
+  }
+
+  public static void getAllClients() {
+    ClientDAO clientDAO = new ClientDAO();
+    clientDAO.getAll();
   }
 }

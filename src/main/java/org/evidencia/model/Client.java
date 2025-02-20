@@ -83,4 +83,19 @@ public class Client {
   public void setEmail(String email) {
     this.email = email;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("\t");
+    sb.append("id=").append(id);
+    sb.append(", firstName='").append(firstName).append('\'');
+    sb.append(", lastName='").append(lastName).append('\'');
+    sb.append(", idNumber='").append(idNumber).append('\'');
+    sb.append(", phoneNumber='").append(phoneNumber).append('\'');
+    sb.append(", city='").append(city).append('\'');
+    sb.append(", address='").append(address).append('\'');
+    sb.append(", email='").append(email).append('\'');
+    sb.append('}');
+    return sb.toString();
+  }
 }
