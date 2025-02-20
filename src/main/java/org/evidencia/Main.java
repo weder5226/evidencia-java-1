@@ -1,20 +1,26 @@
 package org.evidencia;
 
-import org.evidencia.config.DataBaseConfig;
-
-import java.sql.Connection;
-import java.sql.SQLException;
+import org.evidencia.dao.ClientDAO;
+import org.evidencia.model.Client;
 
 public class Main {
   public static void main(String[] args) {
     System.out.println("Testing execution");
+    createClient();
+  }
 
-    try (Connection connection = DataBaseConfig.getConnection()) {
-      if (connection != null) {
-        System.out.println("Successfully connecting to DB");
-      }
-    } catch (SQLException e) {
-      System.err.println("DB error:" + e.getMessage());
-    }
+  public static void createClient() {
+    Client newClient = new Client(
+        "Juan",
+        "Perez",
+        "112233",
+        "987654321",
+        "Bogota",
+        "Calle Falsa 123",
+        "juan.perez@email.com"
+    );
+
+    ClientDAO clientDAO = new ClientDAO();
+    clientDAO.createClient(newClient);
   }
 }
