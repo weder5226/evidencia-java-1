@@ -10,11 +10,11 @@ import java.util.List;
 public class ClientDAO {
   private final String CREATE_SQL = "INSERT INTO clients (first_name, last_name, id_number, phone_number, city, address, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
   private final String SELECT_ALL_SQL = "SELECT id, first_name, last_name, id_number, phone_number, city, address, email FROM clients";
+  private final String UPDATE_SQL = "UPDATE clients SET first_name = ?, last_name = ?, id_number = ?, phone_number = ?, city = ?, address = ?, email = ? WHERE id = ?";
 
   public void create(Client client) {
     try {
-      Connection connection = DataBaseConfig.getConnection();
-      assert connection != null;
+      Connection connection = getConnection();
       PreparedStatement statement = connection.prepareStatement(CREATE_SQL);
 
       statement.setString(1, client.getFirstName());
@@ -26,8 +26,7 @@ public class ClientDAO {
       statement.setString(7, client.getEmail());
 
       int rowsAffected = statement.executeUpdate();
-      boolean wasSuccess = rowsAffected > 0;
-      if (wasSuccess) System.out.println("Client created");
+      if (rowsAffected > 0) System.out.println("Client created");
 
     } catch (SQLException e) {
       System.err.println("Error creating client: " + e.getMessage());
@@ -38,8 +37,7 @@ public class ClientDAO {
     List<Client> clients = new ArrayList<>();
 
     try {
-      Connection connection = DataBaseConfig.getConnection();
-      assert connection != null;
+      Connection connection = getConnection();
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(SELECT_ALL_SQL);
 
@@ -67,5 +65,37 @@ public class ClientDAO {
     } catch (SQLException e) {
       System.err.println("Error retrieving clients: " + e.getMessage());
     }
+  }
+
+  public void update(Client client) {
+    try {
+      Connection connection = getConnection();
+      PreparedStatement statement = connection.prepareStatement(UPDATE_SQL);
+
+      statement.setString(1, client.getFirstName());
+      statement.setString(2, client.getLastName());
+      statement.setString(3, client.getIdNumber());
+      statement.setString(4, client.getPhoneNumber());
+      statement.setString(5, client.getCity());
+      statement.setString(6, client.getAddress());
+      statement.setString(7, client.getEmail());
+      statement.setInt(8, client.getId());
+
+      int rowsAffected = statement.executeUpdate();
+      if (rowsAffected > 0) {
+        System.out.println("Client updated");
+      } else {
+        System.out.println("No client found with ID " + client.getId());
+      }
+
+    } catch (SQLException e) {
+      System.err.println("Error updating client: " + e.getMessage());
+    }
+  }
+
+  private static Connection getConnection() {
+    Connection connection = DataBaseConfig.getConnection();
+    assert connection != null;
+    return connection;
   }
 }
