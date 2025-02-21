@@ -11,10 +11,11 @@ public class ClientDAO {
   private final String CREATE_SQL = "INSERT INTO clients (first_name, last_name, id_number, phone_number, city, address, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
   private final String SELECT_ALL_SQL = "SELECT id, first_name, last_name, id_number, phone_number, city, address, email FROM clients";
   private final String UPDATE_SQL = "UPDATE clients SET first_name = ?, last_name = ?, id_number = ?, phone_number = ?, city = ?, address = ?, email = ? WHERE id = ?";
+  private final String DELETE_SQL = "DELETE FROM clients WHERE id = ?";
 
   public void create(Client client) {
     try {
-      Connection connection = getConnection();
+      Connection connection = DataBaseConfig.getConnection();
       PreparedStatement statement = connection.prepareStatement(CREATE_SQL);
 
       statement.setString(1, client.getFirstName());
@@ -37,7 +38,7 @@ public class ClientDAO {
     List<Client> clients = new ArrayList<>();
 
     try {
-      Connection connection = getConnection();
+      Connection connection = DataBaseConfig.getConnection();
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(SELECT_ALL_SQL);
 
@@ -69,7 +70,7 @@ public class ClientDAO {
 
   public void update(Client client) {
     try {
-      Connection connection = getConnection();
+      Connection connection = DataBaseConfig.getConnection();
       PreparedStatement statement = connection.prepareStatement(UPDATE_SQL);
 
       statement.setString(1, client.getFirstName());
@@ -93,9 +94,22 @@ public class ClientDAO {
     }
   }
 
-  private static Connection getConnection() {
-    Connection connection = DataBaseConfig.getConnection();
-    assert connection != null;
-    return connection;
+  public void delete(int clientId) {
+    try {
+      Connection connection = DataBaseConfig.getConnection();
+      PreparedStatement statement = connection.prepareStatement(DELETE_SQL);
+
+      statement.setInt(1, clientId);
+
+      int rowsAffected = statement.executeUpdate();
+      if (rowsAffected > 0) {
+        System.out.println("Client deleted");
+      } else {
+        System.out.println("No client found with ID " + clientId);
+      }
+
+    } catch (SQLException e) {
+      System.err.println("Error deleting client: " + e.getMessage());
+    }
   }
 }

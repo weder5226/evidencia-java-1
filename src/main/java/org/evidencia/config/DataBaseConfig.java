@@ -10,12 +10,11 @@ public class DataBaseConfig {
   private static final String USER = "admin";
   private static final String PASSWORD = "admin";
 
-  public static Connection getConnection() {
+  public static Connection getConnection() throws SQLException {
     try {
       return DriverManager.getConnection(URL, USER, PASSWORD);
     } catch (SQLException e) {
-      System.out.println("Error connecting to database: " + e.getMessage());
-      return null;
+      throw new SQLException("Error connecting to database: ", e);
     }
   }
 }
